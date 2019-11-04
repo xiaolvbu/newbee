@@ -14,23 +14,24 @@
 </head>
 
 <body>
-  <div class="container-fluid">
+  <div class="container-fluid" id="postBox">
     <div class="common_title">
       写文章
     </div>
-    <div class="container-fluid common_con">
-      <form class="form-horizontal article_form">
+    <div class="container-fluid common_con" id="articleBox">
+      <form class="form-horizontal article_form" id="article_form">
         <div class="form-group">
           <label for="inputEmail3" class="col-sm-2 control-label">文章标题：</label>
           <div class="col-sm-10">
-            <input type="email" name="title" class="form-control" id="inputEmail3" placeholder="文章标题">
+            <input type="text" name="title" class="form-control" id="inputEmail3" placeholder="文章标题">
           </div>
         </div>
         <div class="form-group">
           <label for="inputPassword3" class="col-sm-2 control-label">文章封面：</label>
           <div class="col-sm-10">
-            <img src="./images/2.jpg" style="height:120px;" alt="">
+            <img src="./images/2.jpg" style="height:120px;" alt="" id="ImgBox">
             <input type="file" name="cover" id="exampleInputFile">
+            <input type="hidden" name="cover" id="ImgBox">
           </div>
         </div>
         <div class="form-group">
@@ -46,13 +47,14 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="inputEmail3" class="col-sm-2 control-label">发布时间：</label>
+          <label for="inputEmail3" class="col-sm-2 control-label" name="date">发布时间：</label>
           <div class="col-sm-4">
 
             <div class="input-group">
               <input type="text" name="date" class="form-control" placeholder="YYYY-MM-DD" id="dateinput">
               <span class="input-group-btn">
-                <button class="btn btn-default" type="button" onclick="jeDate('#dateinput',{trigger:false,format: 'YYYY-MM-DD'})"><i
+                <button class="btn btn-default" type="button"
+                  onclick="jeDate('#dateinput',{trigger:false,format: 'YYYY-MM-DD'})"><i
                     class="iconfont icon-icondate"></i></button>
               </span>
             </div>
@@ -61,15 +63,15 @@
         <div class="form-group">
           <label for="inputEmail3" class="col-sm-2 control-label">文章内容：</label>
           <div class="col-sm-10">
-            <textarea class="form-control" id="rich_content" placeholder="文章内容">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda fugiat illo nihil molestias ab. Laborum eius non atque, totam sapiente quae obcaecati assumenda ratione inventore pariatur maiores, qui libero delectus.
-                            </textarea>
+            <textarea class="form-control" id="rich_content" placeholder="文章内容" name="content">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda fugiat illo nihil molestias ab. Laborum eius non atque, totam sapiente quae obcaecati assumenda ratione inventore pariatur maiores, qui libero delectus.
+            </textarea>
           </div>
         </div>
         <div class="form-group">
           <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-success btn-release">发布</button>
-            <button type="submit" class="btn btn-default">存为草稿</button>
+            <button name="state" value="{{$value.atate == null ? '' : $value.atate}}" type="submit" class="btn btn-success btn-release">发布</button>
+            <button name="state" value="1" type="submit" class="btn btn-default">存为草稿</button>
           </div>
         </div>
       </form>
@@ -82,10 +84,151 @@
   <script src="js/tinymce/js/tinymce_setup.js"></script>
   <script src="./js/moment.js"></script>
   <script src="./js/template-web.js"></script>
-  
+
+
+  <script type="text/html" id="articleTpl">
+   
+    <form class="form-horizontal article_form" id="article_form">
+        <div class="form-group">
+          <label for="inputEmail3" class="col-sm-2 control-label">文章标题：</label>
+          <div class="col-sm-10">
+            <input type="text" name="title" class="form-control" id="inputEmail3" placeholder="文章标题">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputPassword3" class="col-sm-2 control-label">文章封面：</label>
+          <div class="col-sm-10">
+            <img src="./images/2.jpg" style="height:120px;" alt="" >
+            <input type="file" name="cover" id="exampleInputFile">
+            <input type="hidden" name="cover" id="ImgBox">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputEmail3" class="col-sm-2 control-label">文章类别：</label>
+          <div class="col-sm-4">
+            <select class="form-control" name="categoryId" id="article_category">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputEmail3" class="col-sm-2 control-label" name="date">发布时间：</label>
+          <div class="col-sm-4">
+
+            <div class="input-group">
+              <input type="text" name="date" class="form-control" placeholder="YYYY-MM-DD" id="dateinput">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button"
+                  onclick="jeDate('#dateinput',{trigger:false,format: 'YYYY-MM-DD'})"><i
+                    class="iconfont icon-icondate"></i></button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputEmail3" class="col-sm-2 control-label">文章内容：</label>
+          <div class="col-sm-10">
+            <textarea class="form-control" id="rich_content" placeholder="文章内容" name="content">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda fugiat illo nihil molestias ab. Laborum eius non atque, totam sapiente quae obcaecati assumenda ratione inventore pariatur maiores, qui libero delectus.
+            </textarea>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button name="state" value="{{$value.atate == null ? '' : $value.atate}}" type="submit" class="btn btn-success btn-release">发布</button>
+            <button name="state" value="1" type="submit" class="btn btn-default">存为草稿</button>
+          </div>
+        </div>
+      </form>
+
+  </script>
+
+  </script>
   <!-- 业务逻辑代码 -->
   <script>
     
+    // 获取用户上传图片
+    document.querySelector('#exampleInputFile').onchange = function () {
+      // console.log('选中啦~')
+
+      // 使用 this.files[0] 伪数组结合下标获取到文件
+      var files = this.files[0]
+
+      // 将文件使用 URL.createObjectURL 转换成 url
+      var imgUrl = URL.createObjectURL(files)
+
+      // 将 生成的 url 赋值给 src
+      document.querySelector('#ImgBox').src = imgUrl
+    }
+    
+
+    // 发布文章
+    $(function () {
+      $('#article_form').on('submit', function () {
+        var formData = $(this).serialize()
+        console.log(formData);
+        
+        $.ajax({
+          url: 'http://47.111.184.55:8888/api/v1/admin/article/publish',
+          type: 'post',
+          data: formData,
+          success: function (data) {
+            // console.log(data);
+           var html = template('articleTpl',{data:data})
+           $('#articleBox').html(html)
+            // alert('发布成功')
+            // location.reload()
+          },
+          error: function () {
+            alert('发布失败')
+          }
+        })
+        return false
+      })
+
+      // 获取ID
+      var id = getUrlParams('id')
+            function getUrlParams(name) {
+                var paramsAry = location.search.substr(1).split('&');
+                // 循环数据
+                for (var i = 0; i < paramsAry.length; i++) {
+                    var tmp = paramsAry[i].split('=');
+                    if (tmp[0] == name) {
+                        return tmp[1];
+                    }
+                }
+                return -1;
+            }
+
+
+            if (id != -1) {
+                $.ajax({
+                    url: `http://47.111.184.55:8888/api/v1/admin/article/search/${id}`,
+                    type: 'get',
+                    success: function (postData) {
+                        // 这里需要再次获取分类列表
+                        // 因为后台返回的只有文章分类,没有所有的分类
+                        $.ajax({
+                            url: `http://47.111.184.55:8888/api/v1//admin/article/edit`,
+                            type: 'get',
+                            success: function (data) {
+                                console.log(postData);
+                                // 将获取到的分类数据添加到文章数据中
+                                // 为了方便对页面进行分类遍历,渲染
+                                postData.categoryList = data
+                                var html = template('modifyPost', postData)
+                                $('#postBox').html(html)
+                            }
+                        })
+                    }
+                })
+            }
+
+    })
   </script>
 </body>
 
