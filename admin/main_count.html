@@ -16,25 +16,25 @@
   <div class="container-fluid">
     <div class="row spannel_list">
       <div class="col-sm-3 col-xs-6">
-        <div class="spannel">
+        <div class="spannel" id="totalArticle">
           <em>10015</em><span>篇</span>
           <b>总文章数</b>
         </div>
       </div>
       <div class="col-sm-3 col-xs-6">
-        <div class="spannel scolor01">
+        <div class="spannel scolor01" id="dayArticle">
           <em>123</em><span>篇</span>
           <b>日新增文章数</b>
         </div>
       </div>
       <div class="col-sm-3 col-xs-6">
-        <div class="spannel scolor02">
+        <div class="spannel scolor02" id="totalComment">
           <em>35</em><span>条</span>
           <b>评论总数</b>
         </div>
       </div>
       <div class="col-sm-3 col-xs-6">
-        <div class="spannel scolor03">
+        <div class="spannel scolor03" id="dayComment">
           <em>123</em><span>条</span>
           <b>日新增评论数</b>
         </div>
@@ -384,6 +384,20 @@
 
   </script>
 
+  
+  <script>
+    // <!-- 获取统计数据 -->
+    $.ajax({
+      url: "http://47.111.184.55:8888/api/v1/admin/data/info",
+      type: "get",
+      success: function (data) {
+        $('#totalArticle').html(`<em>${data.totalArticle}</em><span>篇</span><b>总文章数</b>`)
+        $('#dayArticle').html(`<em>${data.dayArticle}</em><span>篇</span><b>日新增文章数</b>`)
+        $('#totalComment').html(`<em>${data.totalComment}</em><span>条</span><b>评论总数</b>`)
+        $('#dayComment').html(`<em>${data.dayComment}</em><span>条</span><b>日新增评论数</b>`)
+      }
+    })
+  </script>
 </body>
 
 </html>

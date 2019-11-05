@@ -14,9 +14,11 @@
 
 <body>
   <div class="sider">
-    <a href="#" class="logo"><img src="images/logo02.png" alt="logo"></a>
-    <div class="user_info" id="userInfoBox">
-      
+    <a href="javascript:;" class="logo"><img src="images/logo02.png" alt="logo"></a>
+    <div class="user_info">
+      <img src="images/2.jpg" alt="person">
+      <span>欢迎&nbsp;&nbsp;李思思</span>
+      <b>管理员</b>
     </div>
     <div class="menu">
       <div class="level01 active">
@@ -27,7 +29,7 @@
       </div>
 
       <div class="level01">
-        <a href="#">
+        <a href="javascript:;">
           <i class="iconfont icon-icon-article"></i>
           <span>文章管理</span>
           <b class="iconfont icon-arrowdownl"></b>
@@ -72,20 +74,22 @@
   </div>
 
   <div class="header_bar">
-    <form class="search_form">
-      <input type="text" placeholder="请输入搜索内容">
-      <i class="iconfont icon-search"></i>
+    <form class="search_form" id="searchForm">
+      <input type="text" placeholder="请输入搜索内容" id="keys">
+      <i class="iconfont icon-search" id="search"></i>
     </form>
 
     <div class="user_center_link" id="selfBox">
         <a href="user.html" onclick="setMenu(3,0)" target="main_frame">个人中心</a>
         <img src="images/2.jpg" alt="person">
         <a href="#"><i class="iconfont icon-tuichu"></i> 退出</a>
+
     </div>
   </div>
 
   <div class="main" id="main_body">
-    <iframe src="main_count.html" frameborder="0" id="main_frame" name="main_frame" frameborder="0" scrolling="auto"></iframe>
+    <iframe src="main_count.html" frameborder="0" id="main_frame" name="main_frame" frameborder="0"
+      scrolling="auto"></iframe>
   </div>
 
   <!-- 模态框 -->
@@ -93,7 +97,8 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="myModalLabel">温馨提示!</h4>
         </div>
         <div class="modal-body">
@@ -197,8 +202,17 @@
           $('#selfBox').html(html)
         }
       })
+ 
+    $(function () {
+      $('#search').on('click',function() {
+        window.localStorage.setItem('keys',$('#keys').val())
+        $('#main_frame').attr('src','article_list.html')
+      })
+
+      })
     })
   </script>
 </body>
 
 </html>
+

@@ -22,6 +22,7 @@
         <div class="col-xs-6">
           <form class="form-inline" id="filterForm">
             <select id="selCategory" name="type" class="form-control input-sm">
+
             </select>
             <select id="selStatus" name="state" class="form-control input-sm">
               <option value="">所有状态</option>
@@ -48,11 +49,11 @@
           </tr>
         </thead>
         <tbody id="articleListBox">
-
         </tbody>
       </table>
       <div class="row text-center">
           <ul id="pagination-demo" class="pagination-sm"></ul>
+        </ul>
       </div>
 
     </div>
@@ -61,6 +62,7 @@
   <script src="js/jquery-1.12.4.min.js"></script>
   <script src="./js/template-web.js"></script>
   <script src="./js/jquery.twbsPagination.js"></script>
+
   <!-- 文章列表模板 -->
   <script type="text/html" id="articleTpl">
     {{each data}}
@@ -93,25 +95,32 @@
     })
   </script>
 
-  <!-- 文章列表模板 -->
-  <script type="text/html" id="articleListTpl">
-    {{each data.data}}
-    <tr>
-        <td>{{$value.title}}</td>
-        <td>{{$value.author}}</td>
-        <td>{{$value.category}}</td>
-        <td class="text-center">{{$value.date}}</td>
-        <td class="text-center">{{$value.state}}</td>
-        <td class="text-center">
-          <a href="article_edit.html?id={{$value.id}}" class="btn btn-default btn-xs edit">编辑</a>
-          <a href="javascript:deleteTr( 1005 );" class="btn btn-danger btn-xs">删除</a>
-        </td>
-      </tr>
-      {{/each}}
-  </script>
-
-
+  <!-- 业务逻辑代码 -->
   <script>
+    $.ajax({
+      type: 'get',
+      url: 'http://47.111.184.55:8888/api/v1/admin/article/query',
+      success: function (response) {
+        var html = template('articleTpl', response);
+        $('#articleListBox').html(html)
+
+      }
+    })
+
+    // 获取搜索关键字
+    var keys = window.localStorage.getItem('keys');
+    $.ajax({
+      url: 'http://47.111.184.55:8888/api/v1/admin/article/query',
+      type: 'get',
+      data: {
+        key : keys
+      },
+      success: function (data) {
+        var html = template('articleTpl', data)
+        $('#articleListBox').html(html)
+      }
+    })
+
     // 分页
     function getData(mypage) {
       $.ajax({
@@ -182,6 +191,7 @@
       })
       return false
     })
+    
   </script>
 
 </body>
