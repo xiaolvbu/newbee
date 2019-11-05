@@ -49,7 +49,7 @@
         <div class="col-sm-4">
           <select class="form-control category" name="categoryId" id="categoryId">
             {{each response.data}}
-            <option value="{{$value.id}}">{{$value.name}}</option>
+            <option value="{{$value.id}}" {{$value.id == data.categoryId ? 'selected':''}}>{{$value.name}}</option>
             {{/each}}
           </select>
         </div>

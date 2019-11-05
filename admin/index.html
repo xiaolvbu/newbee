@@ -15,7 +15,7 @@
 <body>
   <div class="sider">
     <a href="javascript:;" class="logo"><img src="images/logo02.png" alt="logo"></a>
-    <div class="user_info">
+    <div class="user_info" id="usersInfoBox">
       <img src="images/2.jpg" alt="person">
       <span>欢迎&nbsp;&nbsp;李思思</span>
       <b>管理员</b>
@@ -190,7 +190,7 @@
         type: 'get',
         success: function (data) {
           var html = template('userInfoTpl',data)
-          $('#userInfoBox').html(html)
+          $('#usersInfoBox').html(html)
         }
       })
       //个人中心头像
