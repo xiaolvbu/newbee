@@ -166,7 +166,18 @@
 
   <!-- 业务逻辑代码 -->
   <script>
-
+    
+    $(function () {
+      //1.获取用户信息
+      $.ajax({
+        url: 'http://47.111.184.55:8888/api/v1//admin/user/info',
+        success: function (data) {
+          console.log(data);
+          
+        }
+      })
+      
+    })
   </script>
 </body>
 
