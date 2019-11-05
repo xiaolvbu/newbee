@@ -202,8 +202,7 @@
       $.ajax({
         type: 'get',
         url: 'http://47.111.184.55:8888/api/v1/index/category',
-        success: function (data) {
-          // console.log(data);        
+        success: function (data) {      
           var html = template('categoryTpl', {data: data.data.slice(0,5)});
           $('#NewCategory').html(html)            
         }
@@ -211,8 +210,7 @@
       $.ajax({
         type: 'get',
         url: 'http://47.111.184.55:8888/api/v1/index/category',
-        success: function (data) {
-          // console.log(data);        
+        success: function (data) {      
           var html = template('CategoryTpl', {data: data.data.slice(0,5)});
           $('#RightCategory').html(html)            
         }
@@ -221,8 +219,7 @@
       $.ajax({
         type: 'get',
         url: 'http://47.111.184.55:8888/api/v1/index/rank',
-        success: function (data) {
-          // console.log(data);        
+        success: function (data) {        
           var html = template('rankTpl', data);
           $('#rankHot').html(html)
           $('#ulBox li:eq(0) span').addClass('first')
@@ -235,8 +232,7 @@
         type: 'get',
         url: 'http://47.111.184.55:8888/api/v1/index/latest_comment',
         success: function (data) {
-          data.month = month;
-          console.log(data);        
+          data.month = month;      
           var html = template('NewCommentsTpl', data);
           $('#NewComments').html(html)
         }
@@ -245,8 +241,7 @@
       $.ajax({
         type: 'get',
         url: 'http://47.111.184.55:8888/api/v1/index/attention',
-        success: function (data) {
-          // console.log(data);        
+        success: function (data) {       
           var html = template('attentionTpl', data);
           $('#NewAttention').html(html)
         }

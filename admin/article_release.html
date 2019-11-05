@@ -103,7 +103,6 @@
     $.ajax({
       url: 'http://47.111.184.55:8888/api/v1/admin/category/list',
       success: function (response) {
-        console.log(response)
         var html = template('cateList', { data: response.data })
         $('#article_category').html(html)
       }
@@ -115,20 +114,13 @@
       var files = this.files[0]
       // 获取路径
       var url = URL.createObjectURL(files)
-
-      console.log(url)
       // 图片预览
       $('#coverImg').attr('src', url)
-     
-      
     })
 
     // 为发布文章表单创建提交事件
     $('.btn-release').on('click', function (e) {
-
       e.preventDefault()
-
-      console.log($('form')[0])
       // 获取表单值
       var formData = new FormData($('form')[0])
       formData.append('content', tinyMCE.activeEditor.getContent())
@@ -141,8 +133,7 @@
         contentType: false,
         processData: false,
         success: function (data) {
-          console.log(data)
-          location.reload()
+          location.href = 'article_list.html'
         }
       })
     })

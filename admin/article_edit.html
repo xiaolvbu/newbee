@@ -19,9 +19,6 @@
       文章编辑
     </div>
     <div class="container-fluid common_con" id="modifyArticleParent">
-
-
-
     </div>
   </div>
 
@@ -102,7 +99,7 @@ function getUrlParams(name) {
     }
     return -1;
 }
-console.log(id);
+// console.log(id);
 
 $.ajax({
     type: 'get',
@@ -137,7 +134,6 @@ $('#modifyArticleParent').on('click', '#jojo', function () {
     formData.append('id', id)
     formData.delete('cover')
     formData.append('cover', $('#example').val())
-    // formData.append('cover','')
 
     // 发送ajax请求
     $.ajax({
@@ -148,7 +144,7 @@ $('#modifyArticleParent').on('click', '#jojo', function () {
         processData: false,
         success: function (data) {
             // 跳转页面
-            console.log(data);
+            location.href = 'article_list.html'
         }
     })
     return false
