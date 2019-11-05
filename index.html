@@ -30,13 +30,13 @@
       <div class="menu_collapse fl">
         <a href="javascript:;" class="level_one"><i class="fa fa-list-ul"></i>全部分类</a>
         <ul class="level_two" id="NewCategory">
-          
+
 
         </ul>
       </div>
       <ul class="left_menu fl" id="RightCategory">
 
-        
+
       </ul>
       <ul class="right_menu fr">
         <li><a href="#">科技专题</a></li>
@@ -49,7 +49,7 @@
     <div class="left_con">
       <ul class="focus_list" id="Heat_map">
 
-     </ul>
+      </ul>
 
       <div class="common_title">
         <h3><i class="fa fa-edit"></i> 最新资讯</h3>
@@ -119,13 +119,24 @@
     </div>
     <div class="right_con">
       <div class="common_wrap" id="rankHot">
-        
+
       </div>
       <div class="common_wrap" id="NewComments">
-        
+
       </div>
       <div class="common_wrap" id="NewAttention">
-        
+
+      </div>
+      <!-- 定时滚动 -->
+      <div class="common_wrap" style="text-align: center;" id="news">
+        <ul>
+          <li><a href="#" rel="external nofollow">JS不会</a></li>
+          <li><a href="#" rel="external nofollow">NODEJS不会</a></li>
+          <li><a href="#" rel="external nofollow">AJAX不会</a></li>
+          <li><a href="#" rel="external nofollow">网页不会写</a></li>
+          <li><a href="#" rel="external nofollow">JQUERY不会</a></li>
+          <li><a href="#" rel="external nofollow">我太难了</a></li>
+        </ul>
       </div>
     </div>
   </div>
@@ -169,7 +180,7 @@
     {{/each}}
   </script>
   <!-- 一周热门排行模板 -->
-  <script type="text/html" id="rankTpl">    
+  <script type="text/html" id="rankTpl">
     <h3><i class="fa fa-bar-chart"></i> 一周热门排行</h3>
         <ul class="content_list hotList" id="ulBox">
           {{each data}}
@@ -193,14 +204,14 @@
   <!-- 焦点关注模板 -->
   <script type="text/html" id="attentionTpl">
     <h3><i class="fa fa-bullseye"></i> 焦点关注</h3>
-        <ul class="content_list guanzhu_list">
+        <ul class="content_list guanzhu_list" id="news">
           {{each data}}
             <li><a href="#">{{$value.intro}}</a></li>
           {{/each}}  
         </ul>
   </script>
   <script>
-      // index 代码       
+    // index 代码       
     $(function () {
       //向服务器发送请求，索要分类列表数据
       $.ajax({
@@ -208,17 +219,17 @@
         url: 'http://47.111.184.55:8888/api/v1/index/category',
         success: function (data) {
           // console.log(data);        
-          var html = template('categoryTpl', {data: data.data.slice(0,5)});
-          $('#NewCategory').html(html)            
+          var html = template('categoryTpl', { data: data.data.slice(0, 5) });
+          $('#NewCategory').html(html)
         }
       })
       $.ajax({
         type: 'get',
         url: 'http://47.111.184.55:8888/api/v1/index/category',
         success: function (data) {
-          // console.log(data);        
-          var html = template('CategoryTpl', {data: data.data.slice(0,5)});
-          $('#RightCategory').html(html)            
+          // console.log(data);
+          var html = template('CategoryTpl', { data: data.data.slice(0, 5) });
+          $('#RightCategory').html(html)
         }
       })
       //向服务器发送请求，索要热点图数据
@@ -226,9 +237,9 @@
         url: 'http://47.111.184.55:8888/api/v1/index/hotpic',
         type: 'get',
         success: function (data) {
-          console.log(data);
-          var html = template('photoTpl', {data: data.data})
-          console.log(html);
+          // console.log(data);
+          var html = template('photoTpl', { data: data.data })
+          // console.log(html);
           $('#Heat_map').html(html)
           $('#Heat_map').find(':first').prop('className', 'first')
         }
@@ -266,6 +277,31 @@
           $('#NewAttention').html(html)
         }
       })
+    })
+  </script>
+  <!-- 自动刷新功能 -->
+  <script>
+    $(function () {
+      var $this = $("#news");
+      var scrollTimer;
+      $this.hover(function () {
+        clearInterval(scrollTimer);
+      }, function () {
+        scrollTimer = setInterval(function () {
+          scrollNews($this);
+        }, 1000);
+      }).trigger("mouseleave");
+      function scrollNews(obj) {
+        var $self = obj.find("ul");
+        var lineHeight = $self.find("li:first").height();
+        $self.animate({
+          "marginTop": -lineHeight + "px"
+        }, 600, function () {
+          $self.css({
+            marginTop: 0
+          }).find("li:first").appendTo($self);
+        })
+      }
     })
   </script>
 </body>
