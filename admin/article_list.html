@@ -54,8 +54,8 @@
       </table>
 
       <div class="row text-center">
-        <ul class="pagination pagination-sm">
-
+        <ul class="pagination pagination-sm" id="paginationBox">
+          <!-- 分页模板 -->
         </ul>
       </div>
 
@@ -89,13 +89,7 @@
     {{/each}}
   </script>
 
-  <script type="text/html" id="articleList">
-    <li class="page-item first disabled"><a href="#" class="page-link">首页</a></li>
-    <li class="page-item prev disabled"><a href="#" class="page-link">上一页</a></li>
-    <li class="page-item active"><a href="#" class="page-link">1</a></li>
-    <li class="page-item next"><a href="#" class="page-link">下一页</a></li>
-    <li class="page-item last"><a href="#" class="page-link">尾页</a></li>
-  </script>
+
   <script>
     // 设置左侧菜单
     $('#release_btn').click(function () {
@@ -136,7 +130,6 @@
         data: formData,
         success: function (response) {
           console.log(response);
-
           var html = template('postsTpl', response);
           $('#postsBox').html(html)
 
@@ -147,32 +140,65 @@
 
 
     // 获取搜索关键字
-    var keys = getUrlParams('key');
+    var keys = window.localStorage.getItem('keys');
     $.ajax({
       url: 'http://47.111.184.55:8888/api/v1/admin/article/query',
       type: 'get',
       data: {
-        state: '草稿'
-      }, 
+        key : keys
+      },
       success: function (data) {
-        console.log(data);
         var html = template('postsTpl', data)
         $('#postsBox').html(html)
       }
     })
 
-    // 从浏览器的地址栏中获取查询参数
-    function getUrlParams(name) {
-      var paramsAry = location.search.substr(1).split('&');
-      // 循环数据
-      for (var i = 0; i < paramsAry.length; i++) {
-        var tmp = paramsAry[i].split('=');
-        if (tmp[0] == name) {
-          return tmp[1];
+
+    function getData(myPage) {
+      $.ajax({
+        type: 'get',
+        url: 'http://47.111.184.55:8888/api/v1/admin/article/query',
+        data: {
+          page: myPage, // 当前第几页
+          perpage: 5    // 每页展示条数
+        },
+        success: function (data) {
+
+          var html = template('postsTpl', data)
+          // console.log(html);
+          $('#postsBox').html(html);
+          var totalPages = data.data.totalPage
+          if (myTotalPage != totalPages) {
+            myTotalPage = totalPages
+            $pagination.twbsPagination('destroy')
+            $pagination.twbsPagination($.extend({}, defaultOpts, {
+              startPage: 1,
+              totalPages: totalPages
+            }))
+          }
         }
-      }
-      return -1;
+      })
     }
+    getData(1)
+
+    var $pagination = $('#paginationBox')
+    var myTotalPage = 10
+    var defaultOpts = {
+      totalPages: myTotalPage,
+      visiblePages: 7,
+      first: '首页',
+      last: '末页',
+      prev: '上一页',
+      next: '下一页',
+      onPageClick: function (event, page) {
+        getData(page)
+      }
+    }
+
+    $pagination.twbsPagination(defaultOpts)
+
+    $('#paginationBox').twbsPagination()
+
 
 
   </script>

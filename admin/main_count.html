@@ -384,13 +384,13 @@
 
   </script>
 
-  <!-- 获取统计数据 -->
+  
   <script>
+    // <!-- 获取统计数据 -->
     $.ajax({
       url: "http://47.111.184.55:8888/api/v1/admin/data/info",
       type: "get",
       success: function (data) {
-        console.log(data);
         $('#totalArticle').html(`<em>${data.totalArticle}</em><span>篇</span><b>总文章数</b>`)
         $('#dayArticle').html(`<em>${data.dayArticle}</em><span>篇</span><b>日新增文章数</b>`)
         $('#totalComment').html(`<em>${data.totalComment}</em><span>条</span><b>评论总数</b>`)
