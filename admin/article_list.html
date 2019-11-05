@@ -152,10 +152,10 @@
       url: 'http://47.111.184.55:8888/api/v1/admin/article/query',
       type: 'get',
       data: {
-        key: keys
-      },
+        state: '草稿'
+      }, 
       success: function (data) {
-
+        console.log(data);
         var html = template('postsTpl', data)
         $('#postsBox').html(html)
       }
