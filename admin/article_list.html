@@ -20,6 +20,7 @@
     <div class="container-fluid common_con">
       <div class="row opt_btns">
         <div class="col-xs-6">
+<<<<<<< HEAD
           <form class="form-inline">
             <select id="selCategory" name="" class="form-control input-sm">
               <option value="" id="article_category">所有分类</option>
@@ -27,8 +28,12 @@
               <option>奇趣事</option>
               <option>会生活</option>
               <option>爱旅行</option>
+=======
+          <form class="form-inline" id="filterForm">
+            <select id="selCategory" name="type" class="form-control input-sm">
+>>>>>>> feature/20191105-articleList
             </select>
-            <select id="selStatus" name="" class="form-control input-sm">
+            <select id="selStatus" name="state" class="form-control input-sm">
               <option value="">所有状态</option>
               <option value="草稿">草稿</option>
               <option value="已发布">已发布</option>
@@ -53,6 +58,10 @@
           </tr>
         </thead>
         <tbody id="articleListBox">
+<<<<<<< HEAD
+=======
+
+>>>>>>> feature/20191105-articleList
         </tbody>
       </table>
       <div class="row text-center">
@@ -65,6 +74,31 @@
   <script src="js/jquery-1.12.4.min.js"></script>
   <script src="./js/template-web.js"></script>
   <script src="./js/jquery.twbsPagination.js"></script>
+  <!-- 文章列表模板 -->
+  <script type="text/html" id="articleTpl">
+    {{each data}}
+      <tr>
+        <td>{{$value.title}}</td>
+        <td>{{$value.author}}</td>
+        <td>{{$value.category}}</td>
+        <td class="text-center">{{$value.date}}</td>
+        <td class="text-center">{{$value.state}}</td>
+        <td class="text-center">
+          <a href="article_edit.html" class="btn btn-default btn-xs" data-id="{{$value.id}}">编辑</a>
+          <a href="javascript:deleteTr( 1005 );" class="btn btn-danger btn-xs" data-id="{{$value.id}}">删除</a>
+        </td>
+      </tr>
+    {{/each}}
+  </script>
+
+  <!-- 文章类别 -->
+  <script type="text/html" id="cetagoryTpl">
+    <option value="">所有分类</option>
+    {{each data}}
+      <option value="{{$value.id}}">{{$value.name}}</option>
+    {{/each}}
+  </script>
+
   <script>
     // 设置左侧菜单
     $('#release_btn').click(function () {
@@ -89,16 +123,78 @@
       {{/each}}
   </script>
 
+
   <script>
-      // 发送Ajax请求获取列表数据
+    // 分页
+    function getData(mypage) {
+      $.ajax({
+        type: 'get',
+        url: 'http://47.111.184.55:8888/api/v1/admin/article/query',
+        data: {
+          page: mypage,
+          perpage: 5
+        },
+        success: function (response) {
+          var html = template('articleTpl', {data: response.data.data})
+          $('#articleListBox').html(html)
+          // 获取总页数 
+          var totalPages = response.data.totalPage
+
+          if (myTotalPage != totalPages) {
+            myTotalPage = totalPages
+            
+            $pagination.twbsPagination('destroy')
+            $pagination.twbsPagination($.extend({}, defaultOpts, {
+            startPage: 1,
+            totalPages: totalPages
+            }))
+          }
+        }
+      })
+    }
+    getData(1)
+
+    var $pagination = $('#pagination-demo')
+    var myTotalPage = 10
+    // 配置项
+    var defaultOpts = {
+      totalPages: myTotalPage,
+      visiblePages: 7,
+      first: '首页',
+      last: '末页',
+      prev: '上一页',
+      next: '下一页',
+      onPageClick: function (event, page) {
+        getData(page)
+      }
+    }
+
+    $pagination.twbsPagination(defaultOpts);
+    $('#pagination-demo').twbsPagination();
+
+    // 文章分类
+    $.ajax({
+      url: 'http://47.111.184.55:8888/api/v1/admin/category/list',
+      success: function (response) {
+        var html = template('cetagoryTpl', {data: response.data})
+        $('#selCategory').html(html)
+      }
+    })
+    
+    // 筛选功能
+    $('#filterForm').on('submit', function () {
+      var formData = $(this).serialize()
+      console.log(formData);
       $.ajax({
         url: 'http://47.111.184.55:8888/api/v1/admin/article/query',
-        type: 'get',
-        success: function (data) {
-          var html = template('articleListTpl',{data:data.data})
+        data: formData,
+        success: function (response) {
+          var html = template('articleTpl', {data: response.data.data})
           $('#articleListBox').html(html)
         }
       })
+      return false
+    })
   </script>
 
 </body>
