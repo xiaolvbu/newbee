@@ -74,7 +74,7 @@
   </div>
 
   <div class="header_bar">
-    <form class="search_form">
+    <form class="search_form" id="searchForm">
       <input type="text" placeholder="请输入搜索内容" id="keys">
       <i class="iconfont icon-search" id="icon-search"></i>
     </form>
@@ -169,11 +169,13 @@
   <!-- 业务逻辑代码  搜索文章-->
   <script>
     $(function () {
+      if($('#icon-search'))
       $('.search_form').on('click', '#icon-search', function () {
         //获取用户在表单的内容
         var keys = $('.search_form').find('#keys').val()
         //跳转到搜索结果页面 并将用户搜索的关键字转替到搜索页面
-        location.href = `article_list.html?key=${keys}`
+        location.href= `./article_list.html?key=${keys}`
+        $('')
         return false
       })
     })
@@ -181,3 +183,4 @@
 </body>
 
 </html>
+

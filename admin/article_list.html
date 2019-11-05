@@ -20,15 +20,11 @@
     <div class="container-fluid common_con">
       <div class="row opt_btns">
         <div class="col-xs-6">
-          <form class="form-inline">
-            <select id="selCategory" name="" class="form-control input-sm">
-              <option value="">所有分类</option>
-              <option>未分类</option>
-              <option>奇趣事</option>
-              <option>会生活</option>
-              <option>爱旅行</option>
+          <form class="form-inline" id="filterForm">
+            <select name="type" class="form-control input-sm" id="article_category">
+
             </select>
-            <select id="selStatus" name="" class="form-control input-sm">
+            <select id="selStatus" name="state" class="form-control input-sm">
               <option value="">所有状态</option>
               <option value="草稿">草稿</option>
               <option value="已发布">已发布</option>
@@ -52,23 +48,14 @@
             <th class="text-center" width="100">操作</th>
           </tr>
         </thead>
-        <tbody id="searchList">
+        <tbody id="postsBox">
+
         </tbody>
       </table>
 
       <div class="row text-center">
-        <ul class="pagination pagination-sm" id="postList">
-          <li class="page-item first disabled"><a href="#" class="page-link">首页</a></li>
-          <li class="page-item prev disabled"><a href="#" class="page-link">上一页</a></li>
-          <li class="page-item active"><a href="#" class="page-link">1</a></li>
-          <li class="page-item"><a href="#" class="page-link">2</a></li>
-          <li class="page-item"><a href="#" class="page-link">3</a></li>
-          <li class="page-item"><a href="#" class="page-link">4</a></li>
-          <li class="page-item"><a href="#" class="page-link">5</a></li>
-          <li class="page-item"><a href="#" class="page-link">6</a></li>
-          <li class="page-item"><a href="#" class="page-link">7</a></li>
-          <li class="page-item next"><a href="#" class="page-link">下一页</a></li>
-          <li class="page-item last"><a href="#" class="page-link">尾页</a></li>
+        <ul class="pagination pagination-sm">
+
         </ul>
       </div>
 
@@ -78,15 +65,16 @@
   <script src="js/jquery-1.12.4.min.js"></script>
   <script src="./js/template-web.js"></script>
   <script src="./js/jquery.twbsPagination.js"></script>
-  <script>
-    // 设置左侧菜单
-    $('#release_btn').click(function () {
-      window.parent.setMenu(1, 1);
-    })
+
+  <script type="text/html" id="categoryTpl">
+    <option value=''>所有类别</option>
+    {{each data}}
+    <option value='{{$value.id}}'>{{$value.name}}</option>
+    {{/each}}
   </script>
 
-  <script type="text/html" id="searchTpl">
-    {{each data}}
+  <script type="text/html" id="postsTpl">
+    {{each data.data}}
     <tr>
       <td>{{$value.title}}</td>
       <td>{{$value.author}}</td>
@@ -94,51 +82,72 @@
       <td class="text-center">{{$value.date}}</td>
       <td class="text-center">{{$value.state}}</td>
       <td class="text-center">
-        <a href="article_edit.html" class="btn btn-default btn-xs">编辑</a>
+        <a href="article_edit.html?id={{$value.id}}" class="btn btn-default btn-xs">编辑</a>
         <a href="javascript:deleteTr( 1005 );" class="btn btn-danger btn-xs">删除</a>
       </td>
     </tr>
     {{/each}}
   </script>
 
-  <script type="text/html" id="pageTpl">
+  <script type="text/html" id="articleList">
     <li class="page-item first disabled"><a href="#" class="page-link">首页</a></li>
-  
     <li class="page-item prev disabled"><a href="#" class="page-link">上一页</a></li>
-   
     <li class="page-item active"><a href="#" class="page-link">1</a></li>
-    <li class="page-item"><a href="#" class="page-link">2</a></li>
-    <li class="page-item"><a href="#" class="page-link">3</a></li>
-    <li class="page-item"><a href="#" class="page-link">4</a></li>
-    <li class="page-item"><a href="#" class="page-link">5</a></li>
-    <li class="page-item"><a href="#" class="page-link">6</a></li>
-    <li class="page-item"><a href="#" class="page-link">7</a></li>
     <li class="page-item next"><a href="#" class="page-link">下一页</a></li>
     <li class="page-item last"><a href="#" class="page-link">尾页</a></li>
-       
   </script>
-  <!-- 业务逻辑代码 搜索文章页面-->
   <script>
+    // 设置左侧菜单
+    $('#release_btn').click(function () {
+      window.parent.setMenu(1, 1);
+    })
+  </script>
 
+  <!-- 业务逻辑代码 -->
+  <script>
     $.ajax({
-      url: 'http://47.111.184.55:8888/api/v1/admin/article/query',
       type: 'get',
-      success: function (data) {
-        console.log(data.data.data);
-        console.log(data.data);
-        
-        var html = template('searchTpl', { data: data.data.data })
-        $('#searchList').html(html)
-        var pageL = template('pageTpl', { data: data.data })
-        $('#postList').html(pageL)
+      url: 'http://47.111.184.55:8888/api/v1/admin/article/query',
+      success: function (response) {
+        var html = template('postsTpl', response);
+        $('#postsBox').html(html)
+
       }
     })
 
-  
+    //渲染类别
+    $(function () {
+      $.ajax({
+        url: 'http://47.111.184.55:8888/api/v1/admin/category/list',
+        type: 'get',
+        success: function (response) {
+          var html = template('categoryTpl', response)
+          $('#article_category').html(html);
+        }
+      })
+    })
+
+    //筛选功能
+    $('#filterForm').on('submit', function () {
+      var formData = $(this).serialize();
+      $.ajax({
+        type: 'get',
+        url: 'http://47.111.184.55:8888/api/v1/admin/article/query',
+        data: formData,
+        success: function (response) {
+          console.log(response);
+
+          var html = template('postsTpl', response);
+          $('#postsBox').html(html)
+
+        }
+      })
+      return false;
+    })
+
 
     // 获取搜索关键字
     var keys = getUrlParams('key');
-
     $.ajax({
       url: 'http://47.111.184.55:8888/api/v1/admin/article/query',
       type: 'get',
@@ -146,13 +155,11 @@
         key: keys
       },
       success: function (data) {
-        var html = template('searchTpl', data)
-        $('#searchList').html(html)
-        var page = template('pageTpl', { data: page })
-        $('#postList').html(page)
+
+        var html = template('postsTpl', data)
+        $('#postsBox').html(html)
       }
     })
-
 
     // 从浏览器的地址栏中获取查询参数
     function getUrlParams(name) {
@@ -167,23 +174,7 @@
       return -1;
     }
 
-    //分页
-    function changePage(page) {
-      $.ajax({
-        url: '/posts',
-        type: 'get',
-        data: {
-          page: page
-        },
-        success: function (data) {
-          console.log(data);
-          var html = template('searchTpl', data)
-          $('#searchList').html(html)
-          var page = template('pageTpl', { data: page })
-          $('#postList').html(page)
-        }
-      })
-    }
+
   </script>
 
 </body>
